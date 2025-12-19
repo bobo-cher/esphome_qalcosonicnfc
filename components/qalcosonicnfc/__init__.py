@@ -2,7 +2,7 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
 from esphome.components import sensor, text_sensor#, spi
-from esphome.const import CONF_ID, CONF_NAME, CONF_PROTOCOL, CONF_UPDATE_INTERVAL, UNIT_CUBIC_METER, UNIT_CUBIC_METER_PER_HOUR, UNIT_CELSIUS, UNIT_PERCENT, ICON_WATER, ICON_THERMOMETER, ICON_BATTERY, STATE_CLASS_TOTAL_INCREASING, STATE_CLASS_MEASUREMENT, DEVICE_CLASS_WATER, DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_BATTERY
+from esphome.const import CONF_ID, CONF_NAME, CONF_PROTOCOL, CONF_UPDATE_INTERVAL, CONF_DISABLED_BY_DEFAULT, UNIT_CUBIC_METER, UNIT_CUBIC_METER_PER_HOUR, UNIT_CELSIUS, UNIT_PERCENT, ICON_WATER, ICON_THERMOMETER, ICON_BATTERY, STATE_CLASS_TOTAL_INCREASING, STATE_CLASS_MEASUREMENT, DEVICE_CLASS_WATER, DEVICE_CLASS_TEMPERATURE, DEVICE_CLASS_BATTERY, ENTITY_CATEGORY_DIAGNOSTIC
 
 CODEOWNERS = ["@dbmaxpayne"]
 
@@ -43,13 +43,13 @@ CONFIG_SCHEMA = (
                 accuracy_decimals=3,
                 state_class=STATE_CLASS_TOTAL_INCREASING,
                 device_class=DEVICE_CLASS_WATER,),
-            cv.Optional(CONF_WATER_USAGE_POSITIVE_SENSOR, default={ CONF_NAME: "Water Usage Positive",}): sensor.sensor_schema(
+            cv.Optional(CONF_WATER_USAGE_POSITIVE_SENSOR, default={ CONF_NAME: "Water Usage Positive", CONF_DISABLED_BY_DEFAULT: True, }): sensor.sensor_schema(
                 unit_of_measurement=UNIT_CUBIC_METER,
                 icon=ICON_WATER,
                 accuracy_decimals=3,
                 state_class=STATE_CLASS_TOTAL_INCREASING,
                 device_class=DEVICE_CLASS_WATER,),
-            cv.Optional(CONF_WATER_USAGE_NEGATIVE_SENSOR, default={ CONF_NAME: "Water Usage Negative",}): sensor.sensor_schema(
+            cv.Optional(CONF_WATER_USAGE_NEGATIVE_SENSOR, default={ CONF_NAME: "Water Usage Negative", CONF_DISABLED_BY_DEFAULT: True, }): sensor.sensor_schema(
                 unit_of_measurement=UNIT_CUBIC_METER,
                 icon=ICON_WATER,
                 accuracy_decimals=3,
@@ -70,16 +70,17 @@ CONFIG_SCHEMA = (
             cv.Optional(CONF_EXTERNAL_TEMPERATURE_SENSOR, default={ CONF_NAME: "External Temperature",}): sensor.sensor_schema(
                 unit_of_measurement=UNIT_CELSIUS,
                 icon=ICON_THERMOMETER,
-                accuracy_decimals=2,
+                accuracy_decimals=1,
                 state_class=STATE_CLASS_MEASUREMENT,
                 device_class=DEVICE_CLASS_TEMPERATURE,),
             cv.Optional(CONF_BATTERY_LEVEL_SENSOR, default={ CONF_NAME: "Battery Level",}): sensor.sensor_schema(
                 unit_of_measurement=UNIT_PERCENT,
                 icon=ICON_BATTERY,
                 state_class=STATE_CLASS_MEASUREMENT,
-                device_class=DEVICE_CLASS_BATTERY,),
-            cv.Optional(CONF_RAW_DATA_SENSOR, default={ CONF_NAME: "Raw M-BUS Data",}): text_sensor.text_sensor_schema(),
-            cv.Optional(CONF_TIMEPOINT_SENSOR, default={ CONF_NAME: "Timepoint",}): text_sensor.text_sensor_schema(),
+                device_class=DEVICE_CLASS_BATTERY,
+                entity_category=ENTITY_CATEGORY_DIAGNOSTIC,),
+            cv.Optional(CONF_RAW_DATA_SENSOR, default={ CONF_NAME: "Raw M-BUS Data", CONF_DISABLED_BY_DEFAULT: True, }): text_sensor.text_sensor_schema(entity_category=ENTITY_CATEGORY_DIAGNOSTIC),
+            cv.Optional(CONF_TIMEPOINT_SENSOR, default={ CONF_NAME: "Timepoint",}): text_sensor.text_sensor_schema(entity_category=ENTITY_CATEGORY_DIAGNOSTIC),
             cv.Required(CONF_PN5180_MOSI_PIN): pins.gpio_output_pin_schema,
             cv.Required(CONF_PN5180_MISO_PIN): pins.gpio_output_pin_schema,
             cv.Required(CONF_PN5180_SCK_PIN): pins.gpio_output_pin_schema,
